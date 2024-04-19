@@ -11,6 +11,8 @@
 
 #define OUT_COMMENT 0
 #define IN_COMMENT  1
+#define IN_BLOCK    2
+#define IN_LINE     3
 
 
 
@@ -40,12 +42,14 @@ int main(){
 
         if(state == OUT_COMMENT){
             if(maybe == IN_COMMENT){
-                if(c != '*'){ // Second Comment Start Char
+                if(c == '*'){ //ssss
+                    state = IN_BLOCK;
+                }else if(c == '/'){
+                    state = IN_LINE;
+                }else{
                     putchar(prevC);
                     putchar(c);
                     maybe = OUT_COMMENT;
-                }else{
-                    state = IN_COMMENT;
                 }
             }else if(maybe == OUT_COMMENT){
                 if(c == '/'){ // First Comment Start Char
@@ -54,7 +58,7 @@ int main(){
                     putchar(c);
                 }
             }
-        }else if(state == IN_COMMENT){
+        }else if(state == IN_BLOCK){
             if(maybe == OUT_COMMENT){
                 if(c != '/'){// Second Comment End Char
                     //putchar(prevC);
@@ -71,6 +75,20 @@ int main(){
                 }
             }
 
+        }else if(state == IN_LINE){
+
+
+
+
+
+
+            if(c == '\n'){
+                state = OUT_COMMENT;
+                maybe = OUT_COMMENT;
+                putchar(c);
+            }else{
+
+            }
         }
 
         prevC = c;
